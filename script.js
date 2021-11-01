@@ -1,39 +1,25 @@
-//Lista do exercício proposto
-const entradaJSON = '{"products": ['+
-                '{"name": "Xis Frango","categoriesId": [1],"price": "3000","id":1},'+
-                '{"name":"Xis Carne","categoriesId": [1],"price": "3100","id": 2},'+
-                '{"name": "Xis Coração","categoriesId": [1],"price": "3650","id": 3},'+
-                '{"name": "Guaraná","categoriesId": [6],"price": "900","id": 4},'+
-                '{"name": "Suco","categoriesId": [6],"price": "600","id": 5},'+
-                '{"name": "Água","categoriesId": [6],"price": "500","id": 6},'+
-                '{"name": "Hamburguer","categoriesId": [1, 2],"price": "2850","id": 7},'+
-                '{"name": "Batata frita","categoriesId": [1],"price": "1500","id": 8},'+
-                '{"name": "Sushi","categoriesId": [3, 5, 7],"price": "7000","id": 9},'+
-                '{"name": "Temaki","categoriesId": [3, 5],"price": "2090","id": 10},'+
-                '{"name": "Alaminuta","categoriesId": [7],"price": "2800","id": 11},'+
-                '{"name": "Churrasco","categoriesId": [7],"price": "3190","id": 12},'+
-                '{"name": "Rolinho Primavera","categoriesId": [4, 5],"price": "1590","id": 13}],'+
-                '"categories": ['+
-                '{"name": "Lanche","id": 1},'+
-                '{"name": "Fast food","id": 2},'+
-                '{"name": "Japonesa","id": 3},'+
-                '{"name": "Chinesa","id": 4},'+
-                '{"name": "Oriental","id": 5},'+
-                '{"name": "Bebidas","id": 6},'+
-                '{"name": "Refeições","id": 7}],'+
-                '"establishments": ['+
-                '{"name": "Restaurante","id": 1,"productsId": [4, 6, 5, 11, 12]},'+
-                '{"name": "Comida Asiatica","id": 2,"productsId": [13, 10, 9, 4, 6]},'+
-                '{"name": "Fast Lanches","id": 3,"productsId": [1, 2, 3, 4, 5, 6, 7, 8]}]'+  
-                '}'
+//import da funcao quue le o arquivo
+const fileSystem = require("fs");
+const jsonData = fileSystem.readFileSync("./data.json", "utf8");
 
-//converte JSON para um objeto JavaScript
-let entradaObj = JSON.parse(entradaJSON); 
-console.log(entradaObj);
+// transformando o texto em JSON
+let parsedData = JSON.parse(jsonData);
 
-var meuCarro = new Object();
-meuCarro.fabricacao = "Ford";
-meuCarro.modelo = "Mustang";
-meuCarro.ano = 1969;
+//Manipulacao de dados
+const products = parsedData.products;
+const categories = parsedData.categories;
+const establishments = parsedData.establishments;
 
-console.log(meuCarro)
+const queryResult = establishments.map((e) => {
+    // Cria um novo objeto com base nos Establishments
+    const establishment = new Object();
+    //Atribui os nomes dos establishments
+    establishment.name = e.name;
+
+    //Cria a propriedade products e atribui a ela os produtos com base nos ids
+    establishment.products = e.productsId.map((id) => {
+        return products[id-1].name;
+    });
+    return establishment;
+});
+console.log(queryResult);
